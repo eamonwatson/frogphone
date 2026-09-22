@@ -1,6 +1,6 @@
 {
   "name": "frogphone",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Turn your phone browser into a LAN webcam.",
   "bin": {
     "frogphone": "./server.ts"
@@ -20,6 +20,10 @@
   "keywords": ["webcam", "camera", "lan", "phone"],
   "author": "",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eamonwatson/frogphone.git"
+  },
   "devEngines": {
     "packageManager": {
       "name": "pnpm",
