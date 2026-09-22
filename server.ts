@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { createServer } from "node:https";
 import { readFileSync, existsSync, mkdirSync, writeFileSync } from "node:fs";
-import { homedir } from "node:os";
+import { homedir, networkInterfaces } from "node:os";
 import { join } from "node:path";
 import { generate } from "selfsigned";
 
@@ -61,6 +61,15 @@ const server = createServer(await loadOrCreateCert(), (req, res) => {
   res.end();
 });
 
+function lanAddress(): string {
+  for (const ifaces of Object.values(networkInterfaces())) {
+    for (const iface of ifaces ?? []) {
+      if (iface.family === "IPv4" && !iface.internal) return iface.address;
+    }
+  }
+  return "localhost";
+}
+
 server.listen(PORT, () => {
-  console.log(`frogphone listening on https://0.0.0.0:${PORT}/phone`);
+  console.log(`frogphone listening on https://${lanAddress()}:${PORT}/phone`);
 });
