@@ -13,7 +13,13 @@ FrogPhone has 3 endpoints.
 
 ## How to use FrogPhone
 
-Placeholder until published.
+1. Install and run FrogPhone using the following command:
+```bash
+npx frogphone
+```
+2. On your phone, go to the URL that it printed.
+3. Accept the camera access prompt.
+4. Done! You now use the `/camera` endpoint to view the latest frame that your camera captured.
 
 ## License
 
