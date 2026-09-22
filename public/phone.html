@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: #000;
+      }
+      video {
+        position: fixed;
+        opacity: 0;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      const video = document.createElement("video");
+      video.autoplay = true;
+      video.playsInline = true;
+      video.muted = true;
+      document.body.appendChild(video);
+
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d", { alpha: false });
+
+      async function capture() {
+        if (video.videoWidth === 0) return;
+        if (canvas.width !== video.videoWidth || canvas.height !== video.videoHeight) {
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+        }
+        ctx.drawImage(video, 0, 0);
+        const blob = await new Promise((resolve) =>
+          canvas.toBlob(resolve, "image/jpeg", 0.9),
+        );
+        if (!blob) return;
+        try {
+          await fetch("/ingest", { method: "POST", body: blob });
+        } catch (error) {
+          console.error("upload failed:", error);
+        }
+      }
+
+      async function loop() {
+        await capture();
+        requestAnimationFrame(loop);
+      }
+
+      navigator.mediaDevices
+        .getUserMedia({ video: { facingMode: "environment" } })
+        .then((stream) => {
+          video.srcObject = stream;
+          return video.play();
+        })
+        .then(loop)
+        .catch((error) => console.error("camera permission failed:", error));
+    </script>
+  </body>
+</html>
