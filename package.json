@@ -1,21 +1,22 @@
 {
   "name": "frogphone",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Turn your phone browser into a LAN webcam.",
   "bin": {
-    "frogphone": "./server.ts"
+    "frogphone": "./dist/server.js"
   },
   "files": [
-    "server.ts",
-    "public",
+    "dist",
     "LICENSE.md"
   ],
   "engines": {
-    "node": ">=23.6.0"
+    "node": ">=18"
   },
   "scripts": {
+    "build": "tsc && node -e \"require('fs').cpSync('public','dist/public',{recursive:true})\"",
+    "prepublishOnly": "pnpm run build",
     "start": "node server.ts",
-    "typecheck": "tsc"
+    "typecheck": "tsc --noEmit"
   },
   "keywords": ["webcam", "camera", "lan", "phone"],
   "author": "",
