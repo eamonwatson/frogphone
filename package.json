@@ -1,15 +1,25 @@
 {
   "name": "frogphone",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Turn your phone browser into a LAN webcam.",
+  "bin": {
+    "frogphone": "./server.ts"
+  },
+  "files": [
+    "server.ts",
+    "public",
+    "LICENSE.md"
+  ],
+  "engines": {
+    "node": ">=23.6.0"
+  },
   "scripts": {
     "start": "node server.ts",
     "typecheck": "tsc"
   },
-  "keywords": [],
+  "keywords": ["webcam", "camera", "lan", "phone"],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devEngines": {
     "packageManager": {
       "name": "pnpm",

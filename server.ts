@@ -1,12 +1,15 @@
+#!/usr/bin/env node
 import { createServer } from "node:https";
 import { readFileSync, existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { homedir } from "node:os";
+import { join } from "node:path";
 import { generate } from "selfsigned";
 
 const PORT = Number(process.env.PORT) || 8080;
 
-const certDir = new URL("./.certs/", import.meta.url);
-const keyPath = new URL("key.pem", certDir);
-const certPath = new URL("cert.pem", certDir);
+const certDir = join(homedir(), ".frogphone", "certs");
+const keyPath = join(certDir, "key.pem");
+const certPath = join(certDir, "cert.pem");
 
 async function loadOrCreateCert() {
   if (existsSync(keyPath) && existsSync(certPath)) {
