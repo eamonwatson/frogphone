@@ -48,7 +48,7 @@
 
       async function loop() {
         await capture();
-        requestAnimationFrame(loop);
+        setTimeout(loop, 1000);
       }
 
       navigator.mediaDevices
