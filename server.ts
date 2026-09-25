@@ -36,7 +36,7 @@ async function loadOrCreateCert() {
   const ips = [...new Set([lanIp, "127.0.0.1"])];
   const pems = await generate([{ name: "commonName", value: "frogphone" }], {
     algorithm: "sha256",
-    notAfterDate: new Date(Date.now() + 397 * 24 * 60 * 60 * 1000),
+    notAfterDate: new Date(Date.now() + 200 * 24 * 60 * 60 * 1000),
     extensions: [
       { name: "basicConstraints", cA: false },
       { name: "keyUsage", digitalSignature: true, keyEncipherment: true },
