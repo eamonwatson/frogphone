@@ -1,6 +1,6 @@
 {
   "name": "frogphone",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Turn your phone browser into a LAN webcam.",
   "bin": {
     "frogphone": "./dist/server.js"
