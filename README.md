@@ -7,11 +7,15 @@
 FrogPhone is a very minimal & lightweight version of [phonesense](https://github.com/snappyxo/phonesense) made in TypeScript instead of Python.
 
 ### Endpoints
+
 Camera:
+
 - `/phone` - Prompts for camera access and sends camera feed to `/ingest`.
 - `/ingest` - Receives camera feed and stores the latest frame in memory.
 - `/camera` - View the latest frame that your camera captured.
+
 LED display: 
+
 - `/display` - Turns the screen into an LED board (~24px per LED, change with `?size=`). Tap once for fullscreen.
 - `/display/led` - `GET` returns the board size and pixels, `POST` lets you draw on it.
 
