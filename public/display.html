@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        overflow: hidden;
+        background: #000;
+      }
+      canvas {
+        display: block;
+        width: 100vw;
+        height: 100vh;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas></canvas>
+    <script>
+      const LED_SIZE = Number(new URLSearchParams(location.search).get("size")) || 24;
+
+      const canvas = document.querySelector("canvas");
+      const ctx = canvas.getContext("2d", { alpha: false });
+      let board = { width: 0, height: 0, pixels: [] };
+      let events = null;
+
+      function draw() {
+        ctx.fillStyle = "#000";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        if (!board.width) return;
+        const cell = Math.floor(Math.min(canvas.width / board.width, canvas.height / board.height));
+        const left = Math.floor((canvas.width - cell * board.width) / 2);
+        const top = Math.floor((canvas.height - cell * board.height) / 2);
+        board.pixels.forEach((color, i) => {
+          ctx.fillStyle = color;
+          ctx.fillRect(left + (i % board.width) * cell, top + Math.floor(i / board.width) * cell, cell, cell);
+        });
+      }
+
+      function connect() {
+        const w = Math.max(1, Math.floor(innerWidth / LED_SIZE));
+        const h = Math.max(1, Math.floor(innerHeight / LED_SIZE));
+        const url = `/display/events?w=${w}&h=${h}`;
+        if (events?.url.endsWith(url)) return;
+        events?.close();
+        events = new EventSource(url);
+        events.onmessage = (event) => {
+          board = JSON.parse(event.data);
+          draw();
+        };
+      }
+
+      function fit() {
+        canvas.width = Math.round(innerWidth * devicePixelRatio);
+        canvas.height = Math.round(innerHeight * devicePixelRatio);
+        draw();
+        connect();
+      }
+
+      let wakeLock = null;
+      async function lockScreen() {
+        try {
+          wakeLock = await navigator.wakeLock?.request("screen");
+        } catch (error) {
+          console.error("wake lock failed:", error);
+        }
+      }
+
+      addEventListener("click", () => {
+        document.documentElement.requestFullscreen?.().catch(() => {});
+        if (!wakeLock || wakeLock.released) lockScreen();
+      });
+      document.addEventListener("visibilitychange", () => {
+        if (wakeLock?.released && document.visibilityState === "visible") lockScreen();
+      });
+
+      addEventListener("resize", fit);
+
+      fit();
+      lockScreen();
+    </script>
+  </body>
+</html>
